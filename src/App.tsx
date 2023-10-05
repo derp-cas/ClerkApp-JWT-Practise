@@ -1,26 +1,21 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { UserButton, useAuth, useUser } from "@clerk/clerk-react";
+import React from "react";
+
+// In case the user signs out while on the page.
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const { isLoaded, userId, sessionId, getToken } = useAuth();
+    const { isSignedIn, user } = useUser();
+
+    if (!isLoaded || !userId) {
+        return null;
+    }
+    return (
+        <main className="App">
+            <h1>welcome to the protected zone</h1>
+            <UserButton />
+        </main>
+    );
 }
 
 export default App;
