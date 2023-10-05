@@ -6,7 +6,6 @@ import {
     SignedIn,
     SignedOut,
 } from "@clerk/clerk-react";
-import React from "react";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import PublicPage from "./PublicPage";
 import Rip from "./Rip";
