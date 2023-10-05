@@ -1,20 +1,65 @@
-import { UserButton, useAuth, useUser } from "@clerk/clerk-react";
+import {
+    ClerkProvider,
+    RedirectToSignIn,
+    SignIn,
+    SignUp,
+    SignedIn,
+    SignedOut,
+} from "@clerk/clerk-react";
 import React from "react";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import PublicPage from "./PublicPage";
+import Rip from "./Rip";
 
-// In case the user signs out while on the page.
+const clerkPubKey = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY;
+
+if (!clerkPubKey) {
+    throw new Error("Missing Publishable Key");
+} else {
+    console.log("Api Key Loaded");
+}
+
+function ClerkProviderWithRoutes() {
+    const navigate = useNavigate();
+
+    return (
+        <ClerkProvider
+            publishableKey={clerkPubKey ?? ""}
+            navigate={(to) => navigate(to)}
+        >
+            <Routes>
+                <Route path="/" element={<PublicPage />} />
+                <Route
+                    path="/sign-in/*"
+                    element={<SignIn routing="path" path="/sign-in" />}
+                />
+                <Route
+                    path="/sign-up/*"
+                    element={<SignUp routing="path" path="/sign-up" />}
+                />
+                <Route
+                    path="/protected"
+                    element={
+                        <>
+                            <SignedIn>
+                                <Rip />
+                            </SignedIn>
+                            <SignedOut>
+                                <RedirectToSignIn />
+                            </SignedOut>
+                        </>
+                    }
+                />
+            </Routes>
+        </ClerkProvider>
+    );
+}
 
 function App() {
-    const { isLoaded, userId, sessionId, getToken } = useAuth();
-    const { isSignedIn, user } = useUser();
-
-    if (!isLoaded || !userId) {
-        return null;
-    }
     return (
-        <main className="App">
-            <h1>welcome to the protected zone</h1>
-            <UserButton />
-        </main>
+        <BrowserRouter>
+            <ClerkProviderWithRoutes />
+        </BrowserRouter>
     );
 }
 
