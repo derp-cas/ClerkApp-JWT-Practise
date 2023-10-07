@@ -8,7 +8,7 @@ import {
 } from "@clerk/clerk-react";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import PublicPage from "./PublicPage";
-import Rip from "./Rip";
+import Mainform from "./Mainform";
 
 const clerkPubKey = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY;
 
@@ -41,7 +41,7 @@ function ClerkProviderWithRoutes() {
                     element={
                         <>
                             <SignedIn>
-                                <Rip />
+                                <Mainform />
                             </SignedIn>
                             <SignedOut>
                                 <RedirectToSignIn />
