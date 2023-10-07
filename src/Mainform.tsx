@@ -1,6 +1,7 @@
 import { UserButton, useAuth, useUser } from "@clerk/clerk-react";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
 
 // In case the user signs out while on the page.
 
@@ -24,7 +25,7 @@ function Mainform() {
         // Handle form submission here
     };
     return (
-        <main className="App">
+        <StyledMainForm>
             <h1>welcome to the protected zone</h1>
             <UserButton />
             <div className="form-container">
@@ -93,14 +94,74 @@ function Mainform() {
                         value={playerBio}
                         onChange={(e) => setPlayerBio(e.target.value)}
                     ></textarea>
-
                     <button type="submit">Submit</button>
                 </form>
             </div>
 
             <Link to="/">To Main</Link>
-        </main>
+        </StyledMainForm>
     );
 }
+
+export const StyledMainForm = styled.main`
+    font-family: Arial, sans-serif;
+    background-color: #1e1e1e;
+    color: #c4c4c4;
+    text-align: center;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+
+    h1 {
+        margin-top: 0;
+    }
+
+    .form-container {
+        background-color: #2c2c2c;
+        padding: 20px;
+        border-radius: 10px;
+        width: 300px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    select,
+    textarea {
+        width: 100%;
+        margin: 0 0 15px 0;
+        padding: 10px;
+        background-color: #333;
+        border: none;
+        border-radius: 5px;
+        color: #c4c4c4;
+    }
+
+    button[type="submit"] {
+        background-color: #17a2b8;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #1289a7;
+    }
+`;
 
 export default Mainform;
