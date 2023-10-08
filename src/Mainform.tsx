@@ -7,15 +7,9 @@ import { useFormik } from "formik";
 
 // In case the user signs out while on the page.
 
-function Mainform() {
-    const [playerName, setPlayerName] = useState("");
-    const [playerEmail, setPlayerEmail] = useState("");
-    const [playerPassword, setPlayerPassword] = useState("");
-    const [playerAge, setPlayerAge] = useState<number | undefined>(undefined);
-    const [playerClass, setPlayerClass] = useState("");
-    const [playerBio, setPlayerBio] = useState("");
+const Mainform = () => {
     //Auth
-    const formik = useFormik({
+    const { values, handleBlur, handleChange, handleSubmit } = useFormik({
         initialValues: {
             name: "",
             email: "",
@@ -28,6 +22,7 @@ function Mainform() {
             alert(JSON.stringify(values, null, 2));
         },
     });
+
     const { isLoaded, userId, sessionId, getToken } = useAuth();
     const { isSignedIn, user } = useUser();
 
@@ -35,10 +30,6 @@ function Mainform() {
         return null;
     }
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        // Handle form submission here
-    };
     return (
         <StyledMainForm>
             <h1>welcome to the protected zone</h1>
@@ -49,56 +40,51 @@ function Mainform() {
                     <label htmlFor="playerName">Player Name:</label>
                     <input
                         type="text"
-                        id="playerName"
-                        name="playerName"
-                        value={formik.values.name}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
+                        id="name"
+                        value={values.name}
+                        onChange={handleChange}
+                        // onBlur={formik.handleBlur}
                         required
                     />
 
                     <label htmlFor="playerEmail">Email:</label>
                     <input
                         type="email"
-                        id="playerEmail"
-                        name="playerEmail"
-                        value={formik.values.email}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
+                        id="email"
+                        value={values.email}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
                         required
                     />
 
                     <label htmlFor="playerPassword">Password:</label>
                     <input
                         type="password"
-                        id="playerPassword"
-                        name="playerPassword"
-                        value={formik.values.password}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
+                        id="password"
+                        value={values.password}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
                         required
                     />
 
                     <label htmlFor="playerAge">Age:</label>
                     <input
                         type="number"
-                        id="playerAge"
-                        name="playerAge"
+                        id="age"
                         min="12"
                         max="99"
-                        value={formik.values.age}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
+                        value={values.age}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
                         required
                     />
 
                     <label htmlFor="playerClass">Character Class:</label>
                     <select
-                        id="playerClass"
-                        name="playerClass"
-                        value={formik.values.class}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
+                        id="class"
+                        value={values.class}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
                     >
                         <option value="driller">Driller</option>
                         <option value="gunner">Gunner</option>
@@ -108,12 +94,11 @@ function Mainform() {
 
                     <label htmlFor="playerBio">Player Bio:</label>
                     <textarea
-                        id="playerBio"
-                        name="playerBio"
+                        id="bio"
                         rows={4}
-                        value={formik.values.bio}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
+                        value={values.bio}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
                     ></textarea>
                     <button type="submit">Submit</button>
                 </form>
@@ -122,7 +107,7 @@ function Mainform() {
             <Link to="/">To Main</Link>
         </StyledMainForm>
     );
-}
+};
 
 export const StyledMainForm = styled.main`
     font-family: Arial, sans-serif;

@@ -1,0 +1,14 @@
+import * as yup from "yup";
+
+const passwordRules =
+    /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[A-Z])(?=.*[-\#\$\.\%\&\*])(?=.*[a-zA-Z]).{8,16}$/;
+
+const basicSchema = yup.object().shape({
+    name: yup.string().required("Required"),
+    email: yup
+        .string()
+        .email("Please enter an valid email")
+        .required("Required"),
+    password: yup.string().min(5).matches(passwordRules),
+    age: yup.number().positive().integer().required("Required"),
+});
