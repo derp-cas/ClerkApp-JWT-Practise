@@ -141,13 +141,16 @@ export const StyledMainForm = styled.main`
     input[type="number"],
     select,
     textarea {
-        width: 100%;
+        width: 90%;
         margin: 0 0 15px 0;
         padding: 10px;
         background-color: #333;
         border: none;
         border-radius: 5px;
         color: #c4c4c4;
+    }
+    select {
+        width: 100%;
     }
 
     button[type="submit"] {
