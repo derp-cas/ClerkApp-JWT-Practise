@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { object, string, number, date, InferType } from "yup";
+import { useFormik } from "formik";
 
 // In case the user signs out while on the page.
 
@@ -14,16 +15,21 @@ function Mainform() {
     const [playerClass, setPlayerClass] = useState("");
     const [playerBio, setPlayerBio] = useState("");
     //Auth
-    const formik = useFormik();
+    const formik = useFormik({
+        initialValues: {
+            name: "",
+            email: "",
+            password: "",
+            age: "",
+            class: "",
+            bio: "",
+        },
+        onSubmit: (values) => {
+            alert(JSON.stringify(values, null, 2));
+        },
+    });
     const { isLoaded, userId, sessionId, getToken } = useAuth();
     const { isSignedIn, user } = useUser();
-
-    let userSchema = object({
-        playerName: string().required(),
-        playerEmail: string().email().required(),
-        playerAge: number().required().positive().integer(),
-        playerBio: string().required(),
-    });
 
     if (!isLoaded || !userId) {
         return null;
@@ -45,8 +51,9 @@ function Mainform() {
                         type="text"
                         id="playerName"
                         name="playerName"
-                        value={playerName}
-                        onChange={(e) => setPlayerName(e.target.value)}
+                        value={formik.values.name}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                         required
                     />
 
@@ -55,8 +62,9 @@ function Mainform() {
                         type="email"
                         id="playerEmail"
                         name="playerEmail"
-                        value={playerEmail}
-                        onChange={(e) => setPlayerEmail(e.target.value)}
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                         required
                     />
 
@@ -65,8 +73,9 @@ function Mainform() {
                         type="password"
                         id="playerPassword"
                         name="playerPassword"
-                        value={playerPassword}
-                        onChange={(e) => setPlayerPassword(e.target.value)}
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                         required
                     />
 
@@ -75,10 +84,11 @@ function Mainform() {
                         type="number"
                         id="playerAge"
                         name="playerAge"
-                        min="18"
+                        min="12"
                         max="99"
-                        value={playerAge || ""}
-                        onChange={(e) => setPlayerAge(Number(e.target.value))}
+                        value={formik.values.age}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                         required
                     />
 
@@ -86,8 +96,9 @@ function Mainform() {
                     <select
                         id="playerClass"
                         name="playerClass"
-                        value={playerClass}
-                        onChange={(e) => setPlayerClass(e.target.value)}
+                        value={formik.values.class}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                     >
                         <option value="driller">Driller</option>
                         <option value="gunner">Gunner</option>
@@ -100,8 +111,9 @@ function Mainform() {
                         id="playerBio"
                         name="playerBio"
                         rows={4}
-                        value={playerBio}
-                        onChange={(e) => setPlayerBio(e.target.value)}
+                        value={formik.values.bio}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                     ></textarea>
                     <button type="submit">Submit</button>
                 </form>
