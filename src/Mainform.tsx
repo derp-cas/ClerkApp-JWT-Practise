@@ -2,6 +2,7 @@ import { UserButton, useAuth, useUser } from "@clerk/clerk-react";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { object, string, number, date, InferType } from "yup";
 
 // In case the user signs out while on the page.
 
@@ -13,8 +14,16 @@ function Mainform() {
     const [playerClass, setPlayerClass] = useState("");
     const [playerBio, setPlayerBio] = useState("");
     //Auth
+    const formik = useFormik();
     const { isLoaded, userId, sessionId, getToken } = useAuth();
     const { isSignedIn, user } = useUser();
+
+    let userSchema = object({
+        playerName: string().required(),
+        playerEmail: string().email().required(),
+        playerAge: number().required().positive().integer(),
+        playerBio: string().required(),
+    });
 
     if (!isLoaded || !userId) {
         return null;
