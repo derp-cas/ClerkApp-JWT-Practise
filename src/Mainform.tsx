@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { object, string, number, date, InferType } from "yup";
 import { useFormik } from "formik";
+import { basicSchema } from "./schemas";
 
 // In case the user signs out while on the page.
 
@@ -14,10 +15,12 @@ const Mainform = () => {
             name: "",
             email: "",
             password: "",
+            confirmPassword: "",
             age: "",
             class: "",
             bio: "",
         },
+        validationSchema: basicSchema,
         onSubmit: (values) => {
             alert(JSON.stringify(values, null, 2));
         },
@@ -43,8 +46,7 @@ const Mainform = () => {
                         id="name"
                         value={values.name}
                         onChange={handleChange}
-                        // onBlur={formik.handleBlur}
-                        required
+                        onBlur={handleBlur}
                     />
 
                     <label htmlFor="playerEmail">Email:</label>
@@ -54,7 +56,6 @@ const Mainform = () => {
                         value={values.email}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        required
                     />
 
                     <label htmlFor="playerPassword">Password:</label>
@@ -64,7 +65,16 @@ const Mainform = () => {
                         value={values.password}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        required
+                    />
+                    <label htmlFor="confirmPlayerPassword">
+                        Confirm Password:
+                    </label>
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        value={values.confirmPassword}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
                     />
 
                     <label htmlFor="playerAge">Age:</label>
@@ -76,7 +86,6 @@ const Mainform = () => {
                         value={values.age}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        required
                     />
 
                     <label htmlFor="playerClass">Character Class:</label>
@@ -84,7 +93,6 @@ const Mainform = () => {
                         id="class"
                         value={values.class}
                         onChange={handleChange}
-                        onBlur={handleBlur}
                     >
                         <option value="driller">Driller</option>
                         <option value="gunner">Gunner</option>
@@ -98,7 +106,6 @@ const Mainform = () => {
                         rows={4}
                         value={values.bio}
                         onChange={handleChange}
-                        onBlur={handleBlur}
                     ></textarea>
                     <button type="submit">Submit</button>
                 </form>
