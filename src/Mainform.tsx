@@ -6,11 +6,22 @@ import { object, string, number, date, InferType } from "yup";
 import { useFormik } from "formik";
 import { basicSchema } from "./schemas";
 
-// In case the user signs out while on the page.
+const onSubmit = (values: any, actions: any) => {
+    console.log("submited");
+    actions.resetForm();
+};
 
 const Mainform = () => {
     //Auth
-    const { values, handleBlur, handleChange, handleSubmit } = useFormik({
+    const {
+        values,
+        errors,
+        touched,
+        isSubmitting,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+    } = useFormik({
         initialValues: {
             name: "",
             email: "",
@@ -21,10 +32,11 @@ const Mainform = () => {
             bio: "",
         },
         validationSchema: basicSchema,
-        onSubmit: (values) => {
-            alert(JSON.stringify(values, null, 2));
-        },
+
+        onSubmit,
     });
+
+    console.log(errors);
 
     const { isLoaded, userId, sessionId, getToken } = useAuth();
     const { isSignedIn, user } = useUser();
@@ -47,8 +59,13 @@ const Mainform = () => {
                         value={values.name}
                         onChange={handleChange}
                         onBlur={handleBlur}
+                        className={
+                            errors.name && touched.name ? "input-error" : ""
+                        }
                     />
-
+                    {errors.name && touched.name && (
+                        <p className="error">{errors.name}</p>
+                    )}
                     <label htmlFor="playerEmail">Email:</label>
                     <input
                         type="email"
@@ -56,7 +73,13 @@ const Mainform = () => {
                         value={values.email}
                         onChange={handleChange}
                         onBlur={handleBlur}
+                        className={
+                            errors.email && touched.email ? "input-error" : ""
+                        }
                     />
+                    {errors.email && touched.email && (
+                        <p className="error">{errors.email}</p>
+                    )}
 
                     <label htmlFor="playerPassword">Password:</label>
                     <input
@@ -65,7 +88,16 @@ const Mainform = () => {
                         value={values.password}
                         onChange={handleChange}
                         onBlur={handleBlur}
+                        className={
+                            errors.password && touched.password
+                                ? "input-error"
+                                : ""
+                        }
                     />
+                    {errors.password && touched.password && (
+                        <p className="error">{errors.password}</p>
+                    )}
+
                     <label htmlFor="confirmPlayerPassword">
                         Confirm Password:
                     </label>
@@ -75,7 +107,15 @@ const Mainform = () => {
                         value={values.confirmPassword}
                         onChange={handleChange}
                         onBlur={handleBlur}
+                        className={
+                            errors.confirmPassword && touched.confirmPassword
+                                ? "input-error"
+                                : ""
+                        }
                     />
+                    {errors.confirmPassword && touched.confirmPassword && (
+                        <p className="error">{errors.confirmPassword}</p>
+                    )}
 
                     <label htmlFor="playerAge">Age:</label>
                     <input
@@ -86,19 +126,31 @@ const Mainform = () => {
                         value={values.age}
                         onChange={handleChange}
                         onBlur={handleBlur}
+                        className={
+                            errors.age && touched.age ? "input-error" : ""
+                        }
                     />
+                    {errors.age && touched.age && (
+                        <p className="error">{errors.age}</p>
+                    )}
 
                     <label htmlFor="playerClass">Character Class:</label>
                     <select
                         id="class"
                         value={values.class}
                         onChange={handleChange}
+                        className={
+                            errors.class && touched.class ? "input-error" : ""
+                        }
                     >
                         <option value="driller">Driller</option>
                         <option value="gunner">Gunner</option>
                         <option value="scout">Scout</option>
                         <option value="engineer">Engineer</option>
                     </select>
+                    {errors.class && touched.class && (
+                        <p className="error">{errors.class}</p>
+                    )}
 
                     <label htmlFor="playerBio">Player Bio:</label>
                     <textarea
@@ -106,8 +158,17 @@ const Mainform = () => {
                         rows={4}
                         value={values.bio}
                         onChange={handleChange}
+                        className={
+                            errors.bio && touched.bio ? "input-error" : ""
+                        }
                     ></textarea>
-                    <button type="submit">Submit</button>
+                    {errors.bio && touched.bio && (
+                        <p className="error">{errors.bio}</p>
+                    )}
+
+                    <button disabled={isSubmitting} type="submit">
+                        Submit
+                    </button>
                 </form>
             </div>
 
@@ -177,6 +238,15 @@ export const StyledMainForm = styled.main`
 
     button[type="submit"]:hover {
         background-color: #1289a7;
+    }
+    button:disabled {
+        opacity: 0.35;
+    }
+
+    input.input-error,
+    select.input-error {
+        border: 1px solid;
+        border-color: red;
     }
 `;
 
