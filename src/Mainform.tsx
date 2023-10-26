@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { object, string, number, date, InferType } from "yup";
 import { useFormik } from "formik";
 import { basicSchema } from "./schemas";
+import { useForm } from "react-hook-form";
 
 const onSubmit = (values: any, actions: any) => {
     console.log("submited");
@@ -12,29 +13,14 @@ const onSubmit = (values: any, actions: any) => {
 };
 
 const Mainform = () => {
-    //Auth
     const {
-        values,
-        errors,
-        touched,
-        isSubmitting,
-        handleBlur,
-        handleChange,
+        register,
         handleSubmit,
-    } = useFormik({
-        initialValues: {
-            name: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-            age: "",
-            class: "",
-            bio: "",
-        },
-        validationSchema: basicSchema,
-
-        onSubmit,
-    });
+        formState: { errors, isSubmitting },
+        reset,
+        getValues,
+    } = useForm();
+    //Auth
 
     console.log(errors);
 
@@ -51,120 +37,71 @@ const Mainform = () => {
             <UserButton />
             <div className="form-container">
                 <h2>Deep Rock Galactic Form</h2>
-                <form onSubmit={handleSubmit}>
+                <form>
                     <label htmlFor="playerName">Player Name:</label>
                     <input
+                        {...register("name", { required: "Name is required" })}
                         type="text"
                         id="name"
-                        value={values.name}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={
-                            errors.name && touched.name ? "input-error" : ""
-                        }
                     />
-                    {errors.name && touched.name && (
-                        <p className="error">{errors.name}</p>
-                    )}
+
                     <label htmlFor="playerEmail">Email:</label>
                     <input
+                        {...register("email", {
+                            required: "Email is required",
+                        })}
                         type="email"
                         id="email"
-                        value={values.email}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={
-                            errors.email && touched.email ? "input-error" : ""
-                        }
                     />
-                    {errors.email && touched.email && (
-                        <p className="error">{errors.email}</p>
-                    )}
 
                     <label htmlFor="playerPassword">Password:</label>
                     <input
+                        {...register("password", {
+                            required: "Password is required",
+                        })}
                         type="password"
                         id="password"
-                        value={values.password}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={
-                            errors.password && touched.password
-                                ? "input-error"
-                                : ""
-                        }
                     />
-                    {errors.password && touched.password && (
-                        <p className="error">{errors.password}</p>
-                    )}
 
                     <label htmlFor="confirmPlayerPassword">
                         Confirm Password:
                     </label>
                     <input
+                        {...register("confirmPassword", {
+                            required: "You must confirm your password",
+                        })}
                         type="password"
                         id="confirmPassword"
-                        value={values.confirmPassword}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={
-                            errors.confirmPassword && touched.confirmPassword
-                                ? "input-error"
-                                : ""
-                        }
                     />
-                    {errors.confirmPassword && touched.confirmPassword && (
-                        <p className="error">{errors.confirmPassword}</p>
-                    )}
 
                     <label htmlFor="playerAge">Age:</label>
                     <input
+                        {...register("age", { required: "Age is required" })}
                         type="number"
                         id="age"
                         min="12"
                         max="99"
-                        value={values.age}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className={
-                            errors.age && touched.age ? "input-error" : ""
-                        }
                     />
-                    {errors.age && touched.age && (
-                        <p className="error">{errors.age}</p>
-                    )}
 
                     <label htmlFor="playerClass">Character Class:</label>
                     <select
+                        {...register("class", {
+                            required: "Class is required",
+                        })}
                         id="class"
-                        value={values.class}
-                        onChange={handleChange}
-                        className={
-                            errors.class && touched.class ? "input-error" : ""
-                        }
                     >
                         <option value="driller">Driller</option>
                         <option value="gunner">Gunner</option>
                         <option value="scout">Scout</option>
                         <option value="engineer">Engineer</option>
                     </select>
-                    {errors.class && touched.class && (
-                        <p className="error">{errors.class}</p>
-                    )}
 
                     <label htmlFor="playerBio">Player Bio:</label>
                     <textarea
+                        {...register("bio", { required: "Bio is required" })}
                         id="bio"
                         rows={4}
-                        value={values.bio}
-                        onChange={handleChange}
-                        className={
-                            errors.bio && touched.bio ? "input-error" : ""
-                        }
                     ></textarea>
-                    {errors.bio && touched.bio && (
-                        <p className="error">{errors.bio}</p>
-                    )}
 
                     <button disabled={isSubmitting} type="submit">
                         Submit
