@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { object, string, number, date, InferType } from "yup";
 import { useFormik } from "formik";
 import { basicSchema } from "./schemas";
-import { useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 
 const onSubmit = (values: any, actions: any) => {
     console.log("submited");
@@ -22,14 +22,10 @@ const Mainform = () => {
     } = useForm();
     //Auth
 
-    console.log(errors);
-
-    const { isLoaded, userId, sessionId, getToken } = useAuth();
-    const { isSignedIn, user } = useUser();
-
-    if (!isLoaded || !userId) {
-        return null;
-    }
+    const onSubmit = async (data: FieldValues) => {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        reset();
+    };
 
     return (
         <StyledMainForm>
@@ -37,13 +33,14 @@ const Mainform = () => {
             <UserButton />
             <div className="form-container">
                 <h2>Deep Rock Galactic Form</h2>
-                <form>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <label htmlFor="playerName">Player Name:</label>
                     <input
                         {...register("name", { required: "Name is required" })}
                         type="text"
                         id="name"
                     />
+                    {errors.name && <p>{`${errors.name.message}`}</p>}
 
                     <label htmlFor="playerEmail">Email:</label>
                     <input
@@ -53,15 +50,22 @@ const Mainform = () => {
                         type="email"
                         id="email"
                     />
+                    {errors.email && <p>{`${errors.email.message}`}</p>}
 
                     <label htmlFor="playerPassword">Password:</label>
                     <input
                         {...register("password", {
                             required: "Password is required",
+                            minLength: {
+                                value: 8,
+                                message:
+                                    "Password must be at least 8 characters",
+                            },
                         })}
                         type="password"
                         id="password"
                     />
+                    {errors.password && <p>{`${errors.password.message}`}</p>}
 
                     <label htmlFor="confirmPlayerPassword">
                         Confirm Password:
@@ -69,10 +73,16 @@ const Mainform = () => {
                     <input
                         {...register("confirmPassword", {
                             required: "You must confirm your password",
+                            validate: (value) =>
+                                value === getValues("password") ||
+                                "Password must match",
                         })}
                         type="password"
                         id="confirmPassword"
                     />
+                    {errors.confirmPassword && (
+                        <p>{`${errors.confirmPassword.message}`}</p>
+                    )}
 
                     <label htmlFor="playerAge">Age:</label>
                     <input
@@ -82,6 +92,7 @@ const Mainform = () => {
                         min="12"
                         max="99"
                     />
+                    {errors.age && <p>{`${errors.age.message}`}</p>}
 
                     <label htmlFor="playerClass">Character Class:</label>
                     <select
@@ -95,6 +106,7 @@ const Mainform = () => {
                         <option value="scout">Scout</option>
                         <option value="engineer">Engineer</option>
                     </select>
+                    {errors.class && <p>{`${errors.class.message}`}</p>}
 
                     <label htmlFor="playerBio">Player Bio:</label>
                     <textarea
@@ -102,6 +114,7 @@ const Mainform = () => {
                         id="bio"
                         rows={4}
                     ></textarea>
+                    {errors.bio && <p>{`${errors.bio.message}`}</p>}
 
                     <button disabled={isSubmitting} type="submit">
                         Submit
