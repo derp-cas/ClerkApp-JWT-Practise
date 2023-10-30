@@ -1,11 +1,21 @@
-import { UserButton, useAuth, useUser } from "@clerk/clerk-react";
-import React, { useState } from "react";
+import { UserButton } from "@clerk/clerk-react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { object, string, number, date, InferType } from "yup";
-import { useFormik } from "formik";
-import { basicSchema } from "./schemas";
 import { FieldValues, useForm } from "react-hook-form";
+import { z } from "zod";
+
+const signUpSchema = z
+    .object({
+        email: z.string().email(),
+        password: z
+            .string()
+            .min(10, "Password must be at least 10 characters long"),
+        confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+        message: "Passwords must match",
+        path: ["confirmPassword"],
+    });
 
 const onSubmit = (values: any, actions: any) => {
     console.log("submited");
@@ -35,33 +45,16 @@ const Mainform = () => {
                 <h2>Deep Rock Galactic Form</h2>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <label htmlFor="playerName">Player Name:</label>
-                    <input
-                        {...register("name", { required: "Name is required" })}
-                        type="text"
-                        id="name"
-                    />
+                    <input {...register("name")} type="text" id="name" />
                     {errors.name && <p>{`${errors.name.message}`}</p>}
 
                     <label htmlFor="playerEmail">Email:</label>
-                    <input
-                        {...register("email", {
-                            required: "Email is required",
-                        })}
-                        type="email"
-                        id="email"
-                    />
+                    <input {...register("email")} type="email" id="email" />
                     {errors.email && <p>{`${errors.email.message}`}</p>}
 
                     <label htmlFor="playerPassword">Password:</label>
                     <input
-                        {...register("password", {
-                            required: "Password is required",
-                            minLength: {
-                                value: 8,
-                                message:
-                                    "Password must be at least 8 characters",
-                            },
-                        })}
+                        {...register("password")}
                         type="password"
                         id="password"
                     />
@@ -71,12 +64,7 @@ const Mainform = () => {
                         Confirm Password:
                     </label>
                     <input
-                        {...register("confirmPassword", {
-                            required: "You must confirm your password",
-                            validate: (value) =>
-                                value === getValues("password") ||
-                                "Password must match",
-                        })}
+                        {...register("confirmPassword")}
                         type="password"
                         id="confirmPassword"
                     />
@@ -86,7 +74,7 @@ const Mainform = () => {
 
                     <label htmlFor="playerAge">Age:</label>
                     <input
-                        {...register("age", { required: "Age is required" })}
+                        {...register("age")}
                         type="number"
                         id="age"
                         min="12"
@@ -95,12 +83,7 @@ const Mainform = () => {
                     {errors.age && <p>{`${errors.age.message}`}</p>}
 
                     <label htmlFor="playerClass">Character Class:</label>
-                    <select
-                        {...register("class", {
-                            required: "Class is required",
-                        })}
-                        id="class"
-                    >
+                    <select {...register("class")} id="class">
                         <option value="driller">Driller</option>
                         <option value="gunner">Gunner</option>
                         <option value="scout">Scout</option>
@@ -109,11 +92,7 @@ const Mainform = () => {
                     {errors.class && <p>{`${errors.class.message}`}</p>}
 
                     <label htmlFor="playerBio">Player Bio:</label>
-                    <textarea
-                        {...register("bio", { required: "Bio is required" })}
-                        id="bio"
-                        rows={4}
-                    ></textarea>
+                    <textarea {...register("bio")} id="bio" rows={4}></textarea>
                     {errors.bio && <p>{`${errors.bio.message}`}</p>}
 
                     <button disabled={isSubmitting} type="submit">
