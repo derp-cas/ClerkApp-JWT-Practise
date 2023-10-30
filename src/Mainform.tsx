@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const signUpSchema = z
     .object({
@@ -28,8 +29,7 @@ const Mainform = () => {
         handleSubmit,
         formState: { errors, isSubmitting },
         reset,
-        getValues,
-    } = useForm();
+    } = useForm({ resolver: zodResolver(signUpSchema) });
     //Auth
 
     const onSubmit = async (data: FieldValues) => {
