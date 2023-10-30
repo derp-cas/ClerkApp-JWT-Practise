@@ -7,16 +7,25 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 const signUpSchema = z
     .object({
+        name: z.string().min(4),
         email: z.string().email(),
         password: z
             .string()
             .min(10, "Password must be at least 10 characters long"),
         confirmPassword: z.string(),
+        age: z
+            .number()
+            .min(18, "You have to be at least 18 years old to register")
+            .max(100, "I don't think you are older than 100 years old :P"),
+        class: z.string(),
+        bio: z.string(),
     })
     .refine((data) => data.password === data.confirmPassword, {
         message: "Passwords must match",
         path: ["confirmPassword"],
     });
+
+type SignUpSchema = z.infer<typeof signUpSchema>;
 
 const onSubmit = (values: any, actions: any) => {
     console.log("submited");
@@ -29,7 +38,7 @@ const Mainform = () => {
         handleSubmit,
         formState: { errors, isSubmitting },
         reset,
-    } = useForm({ resolver: zodResolver(signUpSchema) });
+    } = useForm<SignUpSchema>({ resolver: zodResolver(signUpSchema) });
     //Auth
 
     const onSubmit = async (data: FieldValues) => {
@@ -74,11 +83,9 @@ const Mainform = () => {
 
                     <label htmlFor="playerAge">Age:</label>
                     <input
-                        {...register("age")}
+                        {...register("age", { valueAsNumber: true })}
                         type="number"
                         id="age"
-                        min="12"
-                        max="99"
                     />
                     {errors.age && <p>{`${errors.age.message}`}</p>}
 
